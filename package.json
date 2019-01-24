@@ -1,0 +1,15 @@
+{
+  "name": "graphql-hackernews",
+  "version": "1.0.0",
+  "description": "Hackernews API using GraphQL",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Guillermo Chou",
+  "license": "ISC",
+  "dependencies": {
+    "graphql-yoga": "^1.17.0",
+    "lodash": "^4.17.11"
+  }
+}

@@ -23,7 +23,7 @@ const login = async (parent, { email, password }, context, info) => {
     throw new Error('Invalid Password');
   }
 
-  const token = jwt.sign({ userID: user.id }, APP_SECRET);
+  const token = jwt.sign({ userId: user.id }, APP_SECRET);
 
   return { token, user };
 };

@@ -1,33 +1,42 @@
 const { GraphQLServer } = require('graphql-yoga');
+const { prisma } = require('./generated/prisma-client')
 const _ = require('lodash');
 
-let links = [
-  {
-    id: 'link-0',
-    url: 'www.howtographql.com',
-    description: 'Fullstack tutorial for GraphQL'
-  }
-];
+// yarn global add prisma
+// Remember to install prisma 
 
-let idCount = links.length;
+
+// let links = [
+//   {
+//     id: 'link-0',
+//     url: 'www.howtographql.com',
+//     description: 'Fullstack tutorial for GraphQL'
+//   }
+// ];
+
+// let idCount = links.length;
 
 const resolvers = {
   Query: {
     info: () => `This is the GraphQL API for HackerNews`,
-    feed: () => links,
+    feed: (root, args, context, info) => context.prisma.links(),
     link: (parents, { id }) => {
       return _.find(links, { id });
     }
   },
   Mutation: {
-    post: (parent, { description, url }) => {
-      const link = {
-        id: `link-${idCount++}`,
-        description,
-        url
-      };
-      links.push(link);
-      return link;
+    post: (root, { description, url }, context) => {
+      // const link = {
+      //   id: `link-${idCount++}`,
+      //   description,
+      //   url
+      // };
+      // links.push(link);
+      // return link;
+      return context.prisma.createLink({
+        url,
+        description
+      })
     },
     updateLink: (parent, { id, description, url }) => {
       const link = {
@@ -56,7 +65,13 @@ const resolvers = {
 
 const server = new GraphQLServer({
   typeDefs: './src/schema.graphql',
-  resolvers
+  resolvers,
+  context: (request) => {
+    return {
+      ...request,
+      prisma
+    }
+  }
 });
 
 server.start(() =>

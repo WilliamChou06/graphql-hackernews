@@ -3,9 +3,12 @@ const { prisma } = require('./generated/prisma-client');
 const _ = require('lodash');
 
 const Mutation = require('./resolvers/Mutation');
+const Subscription = require('./resolvers/Subscription');
 const Link = require('./resolvers/Link');
 const Query = require('./resolvers/Query');
 const User = require('./resolvers/User');
+const Vote = require('./resolvers/Vote');
+
 
 // yarn global add prisma
 // Remember to install prisma
@@ -23,8 +26,10 @@ const User = require('./resolvers/User');
 const resolvers = {
   Query,
   Mutation,
+  Subscription,
   User,
-  Link
+  Link,
+  Vote
 };
 
 const server = new GraphQLServer({

@@ -29,7 +29,6 @@ const login = async (parent, { email, password }, context, info) => {
 };
 
 const post = (parent, { url, description }, context, info) => {
-  // UserId not getting returned for some reason!
   const userId = getUserId(context);
   return context.prisma.createLink({
     url,
@@ -38,8 +37,27 @@ const post = (parent, { url, description }, context, info) => {
   });
 };
 
+const vote = async (parent, { linkId }, context, info) => {
+  const userId = getUserId(context);
+
+  const linkExists = await context.prisma.$exists.vote({
+    user: { id: userId },
+    link: { id: linkId }
+  });
+
+  if (linkExists) {
+    throw new Error(`You have already voted for link: ${linkId}`);
+  }
+
+  return context.prisma.createVote({
+    user: { connect: { id: userId } },
+    link: { connect: { id: linkId } }
+  });
+};
+
 module.exports = {
   signup,
   login,
-  post
+  post,
+  vote
 };
